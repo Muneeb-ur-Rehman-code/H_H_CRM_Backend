@@ -1,0 +1,17 @@
+{
+  "watch": ["dist"],
+  "ext": "js",
+  "ignore": ["dist/**/*.map", "node_modules"],
+  "delay": "1000",
+  "execMap": {
+    "ts": "ts-node"
+  },
+  "env": {
+    "NODE_ENV": "development"
+  },
+  "events": {
+    "restart": "echo '\\033[36m[nodemon] Server restarted\\033[0m'",
+    "start": "echo '\\033[32m[nodemon] Server started\\033[0m'"
+  },
+  "verbose": false
+}
