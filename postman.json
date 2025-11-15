@@ -1,0 +1,709 @@
+{
+  "info": {
+    "_postman_id": "visa-crm-api-v1",
+    "name": "Visa CRM API",
+    "description": "Complete API collection for Visa Consultancy CRM System",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Student Authentication",
+          "item": [
+            {
+              "name": "Student Login",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"email\": \"student@example.com\",\n    \"password\": \"MyPassword123\"\n}"
+                },
+                "url": {
+                  "raw": "{{BASE_URL}}/api/auth/student/login",
+                  "host": ["{{BASE_URL}}"],
+                  "path": ["api", "auth", "student", "login"]
+                }
+              }
+            },
+            {
+              "name": "Initiate Student Registration",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"email\": \"newstudent@example.com\"\n}"
+                },
+                "url": {
+                  "raw": "{{BASE_URL}}/api/auth/student/register",
+                  "host": ["{{BASE_URL}}"],
+                  "path": ["api", "auth", "student", "register"]
+                }
+              }
+            },
+            {
+              "name": "Verify Student OTP",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"email\": \"newstudent@example.com\",\n    \"otp\": \"123456\"\n}"
+                },
+                "url": {
+                  "raw": "{{BASE_URL}}/api/auth/student/verify-otp",
+                  "host": ["{{BASE_URL}}"],
+                  "path": ["api", "auth", "student", "verify-otp"]
+                }
+              }
+            },
+            {
+              "name": "Complete Student Registration",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{temp_token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"name\": \"John Student\",\n    \"password\": \"SecurePass123\",\n    \"phone\": \"+1234567890\",\n    \"location\": \"New York\",\n    \"targetCountry\": \"Canada\"\n}"
+                },
+                "url": {
+                  "raw": "{{BASE_URL}}/api/auth/student/complete-registration",
+                  "host": ["{{BASE_URL}}"],
+                  "path": ["api", "auth", "student", "complete-registration"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Staff Authentication",
+          "item": [
+            {
+              "name": "Staff Login",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"email\": \"consultant@company.com\",\n    \"password\": \"MyPassword123\",\n    \"role\": \"consultant\"\n}"
+                },
+                "url": {
+                  "raw": "{{BASE_URL}}/api/auth/staff/login",
+                  "host": ["{{BASE_URL}}"],
+                  "path": ["api", "auth", "staff", "login"]
+                }
+              }
+            },
+            {
+              "name": "Staff Self-Registration",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"email\": \"newstaff@company.com\",\n    \"name\": \"Jane Smith\",\n    \"phone\": \"+1234567890\",\n    \"role\": \"consultant\"\n}"
+                },
+                "url": {
+                  "raw": "{{BASE_URL}}/api/auth/staff/register",
+                  "host": ["{{BASE_URL}}"],
+                  "path": ["api", "auth", "staff", "register"]
+                }
+              }
+            },
+            {
+              "name": "Verify Staff Registration OTP",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"email\": \"newstaff@company.com\",\n    \"otp\": \"123456\"\n}"
+                },
+                "url": {
+                  "raw": "{{BASE_URL}}/api/auth/staff/verify-registration-otp",
+                  "host": ["{{BASE_URL}}"],
+                  "path": ["api", "auth", "staff", "verify-registration-otp"]
+                }
+              }
+            },
+            {
+              "name": "Complete Staff Setup",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"token\": \"token_from_email_link\",\n    \"password\": \"SecurePassword123\"\n}"
+                },
+                "url": {
+                  "raw": "{{BASE_URL}}/api/auth/staff/complete-setup",
+                  "host": ["{{BASE_URL}}"],
+                  "path": ["api", "auth", "staff", "complete-setup"]
+                }
+              }
+            },
+            {
+              "name": "Admin Login",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"email\": \"ceo@visaconsultancy.com\",\n    \"password\": \"Admin@123456\"\n}"
+                },
+                "url": {
+                  "raw": "{{BASE_URL}}/api/auth/admin/login",
+                  "host": ["{{BASE_URL}}"],
+                  "path": ["api", "auth", "admin", "login"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Common",
+          "item": [
+            {
+              "name": "Resend OTP",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"email\": \"user@example.com\"\n}"
+                },
+                "url": {
+                  "raw": "{{BASE_URL}}/api/auth/resend-otp",
+                  "host": ["{{BASE_URL}}"],
+                  "path": ["api", "auth", "resend-otp"]
+                }
+              }
+            },
+            {
+              "name": "Verify Token",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{BASE_URL}}/api/auth/verify",
+                  "host": ["{{BASE_URL}}"],
+                  "path": ["api", "auth", "verify"]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "CEO Dashboard",
+      "item": [
+        {
+          "name": "Create Staff Directly",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ceo_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"newstaff@company.com\",\n    \"name\": \"New Staff Member\",\n    \"role\": \"consultant\",\n    \"phone\": \"+1234567890\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/ceo/staff/create",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "ceo", "staff", "create"]
+            }
+          }
+        },
+        {
+          "name": "Get Pending Registrations",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ceo_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/api/ceo/staff/pending-registrations",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "ceo", "staff", "pending-registrations"]
+            }
+          }
+        },
+        {
+          "name": "Approve Staff Registration",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ceo_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"reviewNotes\": \"Approved after verification\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/ceo/staff/approve/:userId",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "ceo", "staff", "approve", ":userId"]
+            }
+          }
+        },
+        {
+          "name": "Reject Staff Registration",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ceo_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"reason\": \"Position already filled\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/ceo/staff/reject/:userId",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "ceo", "staff", "reject", ":userId"]
+            }
+          }
+        },
+        {
+          "name": "Get All Staff",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ceo_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/api/ceo/staff?page=1&limit=10&role=consultant&accountStatus=active",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "ceo", "staff"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "role",
+                  "value": "consultant"
+                },
+                {
+                  "key": "accountStatus",
+                  "value": "active"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Staff Member",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ceo_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Updated Name\",\n    \"phone\": \"+9876543210\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/ceo/staff/:id",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "ceo", "staff", ":id"]
+            }
+          }
+        },
+        {
+          "name": "Toggle Staff Status",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ceo_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"isActive\": false\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/ceo/staff/:id/status",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "ceo", "staff", ":id", "status"]
+            }
+          }
+        },
+        {
+          "name": "Get Dashboard Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ceo_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/api/ceo/dashboard/stats",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "ceo", "dashboard", "stats"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Consultant Dashboard",
+      "item": [
+        {
+          "name": "Add Potential Client",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{consultant_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"John Doe\",\n    \"email\": \"john@example.com\",\n    \"phone\": \"+1234567890\",\n    \"targetCountry\": \"Canada\",\n    \"preferredCourse\": \"Computer Science\",\n    \"source\": \"tablet\",\n    \"notes\": \"Interested in Fall 2024 intake\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/consultant/potential-clients",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "consultant", "potential-clients"]
+            }
+          }
+        },
+        {
+          "name": "Get Potential Clients",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{consultant_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/api/consultant/potential-clients?page=1&limit=10&status=new",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "consultant", "potential-clients"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "status",
+                  "value": "new"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Potential Client",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{consultant_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"notes\": \"Updated notes after discussion\",\n    \"preferredCourse\": \"Business Administration\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/consultant/potential-clients/:potentialClientId",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "consultant", "potential-clients", ":potentialClientId"]
+            }
+          }
+        },
+        {
+          "name": "Approve Potential Client",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{consultant_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"university\": \"University of Toronto\",\n    \"city\": \"Toronto\",\n    \"notes\": \"Good candidate for student visa\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/consultant/potential-clients/:potentialClientId/approve",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "consultant", "potential-clients", ":potentialClientId", "approve"]
+            }
+          }
+        },
+        {
+          "name": "Reject Potential Client",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{consultant_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"reason\": \"Not meeting visa requirements\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/consultant/potential-clients/:potentialClientId/reject",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "consultant", "potential-clients", ":potentialClientId", "reject"]
+            }
+          }
+        },
+        {
+          "name": "Get Leads",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{consultant_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/api/consultant/leads?page=1&limit=10&status=new",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "consultant", "leads"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "status",
+                  "value": "new"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "BASE_URL",
+      "value": "http://localhost:5000",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "ceo_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "consultant_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "temp_token",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}
