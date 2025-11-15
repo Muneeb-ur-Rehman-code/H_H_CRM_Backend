@@ -1,9 +1,9 @@
 import { Router } from 'express';
+import { body, param } from 'express-validator';
 import CEOController from '../controllers/ceo/ceo.controller';
 import { protect } from '../middleware/auth.middleware';
 import { authorize } from '../middleware/role.middleware';
 import { validate } from '../middleware/validation.middleware';
-import { validators } from '../utils/validators';
 import { UserRole } from '../types/user.types';
 
 const router = Router();
@@ -12,43 +12,48 @@ const router = Router();
 router.use(protect);
 router.use(authorize(UserRole.CEO));
 
-// Staff Management
+// Create staff directly
 router.post(
-  '/staff',
-  validators.createStaff,
+  '/staff/create',
+  [
+    body('email').isEmail().normalizeEmail(),
+    body('name').notEmpty().trim(),
+    body('role').isIn(['manager', 'consultant', 'accountant', 'backend_officer']),
+    body('phone').optional()
+  ],
   validate,
-  CEOController.createStaffMember
+  CEOController.createStaff
 );
 
-router.get(
-  '/staff',
-  validators.pagination,
-  validate,
-  CEOController.getAllStaff
-);
+// Get pending registrations
+router.get('/staff/pending-registrations', CEOController.getPendingRegistrations);
 
-router.put(
-  '/staff/:id',
-  validators.mongoId('id'),
-  validate,
-  CEOController.updateStaffMember
-);
-
-router.patch(
-  '/staff/:id/status',
-  validators.mongoId('id'),
-  validate,
-  CEOController.toggleStaffStatus
-);
-
+// Approve staff registration
 router.post(
-  '/staff/:id/reset-password',
-  validators.mongoId('id'),
+  '/staff/approve/:userId',
+  [
+    param('userId').isMongoId(),
+    body('reviewNotes').optional()
+  ],
   validate,
-  CEOController.resetStaffPassword
+  CEOController.approveRegistration
 );
 
-// Dashboard Stats
+// Reject staff registration
+router.post(
+  '/staff/reject/:userId',
+  [
+    param('userId').isMongoId(),
+    body('reason').notEmpty()
+  ],
+  validate,
+  CEOController.rejectRegistration
+);
+
+// Get all staff
+router.get('/staff', CEOController.getAllStaff);
+
+// Dashboard stats
 router.get('/dashboard/stats', CEOController.getDashboardStats);
 
 export default router;

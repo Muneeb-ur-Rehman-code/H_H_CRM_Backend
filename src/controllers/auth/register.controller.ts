@@ -3,80 +3,48 @@ import AuthService from '../../services/auth.service';
 import ApiResponse from '../../utils/ApiResponse';
 import ApiError from '../../utils/ApiError';
 import { SUCCESS_MESSAGES, ERROR_MESSAGES } from '../../config/constants';
-import { UserRole } from '../../types/user.types';
 
 class RegisterController {
-  // Check Student Email
+  // This controller is no longer needed as registration is handled in auth.controller.ts
+  // Keeping for backward compatibility or can be removed
+  
   async checkEmail(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { email } = req.body;
-
-      const result = await AuthService.checkStudentEmail(email);
-
-      if (!result.exists) {
-        res.status(200).json(
-          ApiResponse.success('Email available for registration', {
-            available: true
-          })
-        );
-        return;
-      }
-
-      if (!result.isStudent) {
-        throw new ApiError(400, 'This email is registered as staff member');
-      }
-
-      if (!result.hasPassword) {
-        res.status(200).json(
-          ApiResponse.success('Please set your password to continue', {
-            needsPasswordSetup: true
-          })
-        );
-        return;
-      }
-
-      res.status(400).json(
-        ApiResponse.error('Email already registered. Please login.')
+      
+      // Use the new flow
+      const result = await AuthService.studentInitiateRegistration(email);
+      
+      res.status(200).json(
+        ApiResponse.success(result.message, {
+          status: result.status
+        })
       );
     } catch (error) {
       next(error);
     }
   }
 
-  // Student Registration
   async registerStudent(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { name, email, password, phone } = req.body;
-
-      const { user, token } = await AuthService.registerStudent({
-        name,
-        email,
-        password,
-        phone
-      });
-
-      res.status(201).json(
-        ApiResponse.success(SUCCESS_MESSAGES.REGISTER_SUCCESS, {
-          user: {
-            id: user._id,
-            name: user.name,
-            email: user.email,
-            role: user.role
-          }
-        }, token)
-      );
+      // This is now a multi-step process
+      // Step 1: Initiate registration (handled by checkEmail)
+      // Step 2: Verify OTP
+      // Step 3: Complete registration
+      
+      throw new ApiError(400, 'Please use the new registration flow: /api/auth/student/register');
     } catch (error) {
       next(error);
     }
   }
 
-  // Set Password
   async setPassword(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { token, password } = req.body;
-
-      const { user, token: jwtToken } = await AuthService.setPassword(token, password);
-
+      
+      // Use the new staff/student complete setup flow
+      const { user, token: jwtToken } = await AuthService.staffCompleteSetup(token, password);
+      
       res.status(200).json(
         ApiResponse.success(SUCCESS_MESSAGES.PASSWORD_SET, {
           user: {

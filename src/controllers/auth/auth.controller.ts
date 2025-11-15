@@ -1,29 +1,23 @@
 import { Request, Response, NextFunction } from 'express';
 import AuthService from '../../services/auth.service';
 import ApiResponse from '../../utils/ApiResponse';
-import ApiError from '../../utils/ApiError';
-import { SUCCESS_MESSAGES, ERROR_MESSAGES } from '../../config/constants';
 import { UserRole } from '../../types/user.types';
 
 class AuthController {
-  // Staff Login
+  // ==================== STAFF CONTROLLERS ====================
+  
   async staffLogin(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { email, password, role } = req.body;
 
-      // Validate that role is not student
-      if (role === UserRole.STUDENT) {
-        throw new ApiError(400, ERROR_MESSAGES.ROLE_MISMATCH);
-      }
-
       const { user, token } = await AuthService.staffLogin(email, password, role);
 
       res.status(200).json(
-        ApiResponse.success(SUCCESS_MESSAGES.LOGIN_SUCCESS, {
+        ApiResponse.success('Login successful', {
           user: {
             id: user._id,
-            name: user.name,
             email: user.email,
+            name: user.name,
             role: user.role
           }
         }, token)
@@ -33,19 +27,58 @@ class AuthController {
     }
   }
 
-  // Student Login
+  async staffSelfRegister(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const result = await AuthService.staffSelfRegister(req.body);
+      res.status(201).json(ApiResponse.success(result.message));
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async verifyStaffRegistrationOTP(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { email, otp } = req.body;
+      const result = await AuthService.verifyStaffRegistrationOTP(email, otp);
+      res.status(200).json(ApiResponse.success(result.message));
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async staffCompleteSetup(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { token, password } = req.body;
+      const { user, token: jwtToken } = await AuthService.staffCompleteSetup(token, password);
+
+      res.status(200).json(
+        ApiResponse.success('Account setup completed successfully', {
+          user: {
+            id: user._id,
+            email: user.email,
+            name: user.name,
+            role: user.role
+          }
+        }, jwtToken)
+      );
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  // ==================== STUDENT CONTROLLERS ====================
+
   async studentLogin(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { email, password } = req.body;
-
       const { user, token } = await AuthService.studentLogin(email, password);
 
       res.status(200).json(
-        ApiResponse.success(SUCCESS_MESSAGES.LOGIN_SUCCESS, {
+        ApiResponse.success('Login successful', {
           user: {
             id: user._id,
-            name: user.name,
             email: user.email,
+            name: user.name,
             role: user.role
           }
         }, token)
@@ -55,19 +88,37 @@ class AuthController {
     }
   }
 
-  // CEO Login (Admin)
-  async adminLogin(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async studentInitiateRegistration(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { email, password } = req.body;
+      const { email } = req.body;
+      const result = await AuthService.studentInitiateRegistration(email);
+      res.status(200).json(ApiResponse.success(result.message, { status: result.status }));
+    } catch (error) {
+      next(error);
+    }
+  }
 
-      const { user, token } = await AuthService.staffLogin(email, password, UserRole.CEO);
+  async studentVerifyOTP(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { email, otp } = req.body;
+      const result = await AuthService.studentVerifyOTP(email, otp);
+      res.status(200).json(ApiResponse.success(result.message, { tempToken: result.tempToken }));
+    } catch (error) {
+      next(error);
+    }
+  }
 
-      res.status(200).json(
-        ApiResponse.success(SUCCESS_MESSAGES.LOGIN_SUCCESS, {
+  async studentCompleteRegistration(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const userId = req.user!._id;
+      const { user, token } = await AuthService.studentCompleteRegistration(userId.toString(), req.body);
+
+      res.status(201).json(
+        ApiResponse.success('Registration completed successfully', {
           user: {
             id: user._id,
-            name: user.name,
             email: user.email,
+            name: user.name,
             role: user.role
           }
         }, token)
@@ -77,25 +128,11 @@ class AuthController {
     }
   }
 
-  // Verify Token
-  async verifyToken(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async resendOTP(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const user = req.user;
-
-      if (!user) {
-        throw new ApiError(401, ERROR_MESSAGES.UNAUTHORIZED);
-      }
-
-      res.status(200).json(
-        ApiResponse.success('Token is valid', {
-          user: {
-            id: user._id,
-            name: user.name,
-            email: user.email,
-            role: user.role
-          }
-        })
-      );
+      const { email } = req.body;
+      const result = await AuthService.resendOTP(email);
+      res.status(200).json(ApiResponse.success(result.message));
     } catch (error) {
       next(error);
     }

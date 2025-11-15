@@ -9,24 +9,51 @@ export enum UserRole {
   STUDENT = 'student'
 }
 
+export type AccountStatus = 'pending_approval' | 'pending_setup' | 'active' | 'suspended';
+export type CreatedVia = 'admin' | 'self_registration' | 'consultant' | 'direct';
+
 export interface IUser extends Document {
   _id: Types.ObjectId;
-  name: string;
   email: string;
   password?: string;
-  role: UserRole;
+  name: string;
   phone?: string;
-  isActive: boolean;
-  isEmailVerified: boolean;
-  passwordSetupToken?: string;
-  passwordSetupExpire?: Date;
+  role: UserRole;
+  accountStatus: AccountStatus;
+  passwordSet: boolean;
+  emailVerified: boolean;
+  profileCompleted: boolean;
+  createdBy?: Types.ObjectId;
+  createdVia: CreatedVia;
+  approvedBy?: Types.ObjectId;
+  approvedAt?: Date;
+  pendingRegistrationData?: {
+    additionalInfo?: any;
+    submittedAt?: Date;
+    reviewNotes?: string;
+  };
+  emailOTP?: {
+    code?: string;
+    expiry?: Date;
+    attempts?: number;
+    lastAttempt?: Date;
+  };
+  setupToken?: string;
+  setupTokenExpiry?: Date;
   lastLogin?: Date;
+  setupCompletedAt?: Date;
+  isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
+  
+  // Methods
   comparePassword(candidatePassword: string): Promise<boolean>;
-  generatePasswordSetupToken(): string;
+  generateOTP(): string;
+  verifyOTP(otp: string): Promise<boolean>;
+  generateSetupToken(): string;
 }
 
+// Other interfaces remain the same...
 export interface IStudentProfile extends Document {
   userId: Types.ObjectId;
   targetCountry?: string;
