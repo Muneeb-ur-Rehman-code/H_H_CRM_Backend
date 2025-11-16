@@ -9,8 +9,10 @@ const seedCEO = async (): Promise<void> => {
     if (mongoose.connection.readyState !== 1) {
       await mongoose.connect(config.mongoUri);
     }
+    console.log('🌱 Seeding CEO account...');
 
     const existingCEO = await User.findOne({ role: UserRole.CEO });
+    console.log('Existing CEO check complete' , existingCEO ? 'Found' : 'Not Found');
 
     if (existingCEO) {
       console.log('✅ CEO account already exists');
@@ -22,8 +24,10 @@ const seedCEO = async (): Promise<void> => {
       email: config.ceo.email,
       password: config.ceo.password,
       role: UserRole.CEO,
+      // createdVia is required by the User model
+      createdVia: 'admin',
       isActive: true,
-      isEmailVerified: true
+      emailVerified: true
     });
 
     console.log('✅ CEO account created successfully');
