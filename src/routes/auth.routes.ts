@@ -72,7 +72,7 @@ router.post(
 // Initiate student registration
 router.post(
   '/student/register',
-  [body('email').isEmail().normalizeEmail()],
+  [body('email').isEmail().withMessage('Please provide a valid email address').normalizeEmail(),],
   validate,
   AuthController.studentInitiateRegistration
 );
