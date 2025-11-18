@@ -24,6 +24,9 @@ const seedCEO = async (): Promise<void> => {
       email: config.ceo.email,
       password: config.ceo.password,
       role: UserRole.CEO,
+      accountStatus: 'active',
+      passwordSet: true, 
+      profileCompleted: true,
       // createdVia is required by the User model
       createdVia: 'admin',
       isActive: true,
