@@ -702,6 +702,35 @@ class AuthService {
       }
     }
   }
+    // CEO + Future Admin Login (Special Case)
+  async adminOrCEOLogin(email: string, password: string) {
+    const user = await User.findOne({
+      email: email.toLowerCase(),
+      role: UserRole.CEO
+    }).select('+password');
+
+    if (!user) throw new ApiError(401, 'Invalid email or password');
+    if (!user.isActive) throw new ApiError(403, 'Account deactivated');
+
+    const isMatch = await user.comparePassword(password);
+    if (!isMatch) throw new ApiError(401, 'Invalid email or password');
+
+    // CEO ke liye force active kar do (seed account hai)
+    if (user.accountStatus !== 'active') {
+      user.accountStatus = 'active';
+      user.profileCompleted = true;
+    }
+
+    user.lastLogin = new Date();
+    await user.save();
+
+    const token = TokenService.generateJWT(user._id.toString(), user.role);
+    user.password = undefined as any;
+
+    return { user, token };
+  }
 }
+
+
 
 export default new AuthService();

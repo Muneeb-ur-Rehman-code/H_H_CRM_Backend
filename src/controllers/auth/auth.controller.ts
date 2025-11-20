@@ -4,6 +4,28 @@ import ApiResponse from '../../utils/ApiResponse';
 import { UserRole } from '../../types/user.types';
 
 class AuthController {
+
+
+  // ==================== ADMIN CONTROLLERS ====================
+    async adminLogin(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { email, password } = req.body;
+      const { user, token } = await AuthService.adminOrCEOLogin(email, password);
+
+      res.status(200).json(
+        ApiResponse.success('Admin login successful', {
+          user: {
+            id: user._id,
+            name: user.name,
+            email: user.email,
+            role: user.role
+          }
+        }, token)
+      );
+    } catch (error) {
+      next(error);
+    }
+  }
   // ==================== STAFF CONTROLLERS ====================
   
   async staffLogin(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -137,6 +159,8 @@ class AuthController {
       next(error);
     }
   }
+  
 }
+
 
 export default new AuthController();
