@@ -37,7 +37,7 @@ const config: Config = {
   },
   urls: {
     clientUrl: process.env.CLIENT_URL || 'http://localhost:5173',
-    crmUrl: process.env.CRM_URL || 'http://localhost:3001'
+    crmUrl: process.env.CRM_URL || 'http://localhost:5173'
   },
   ceo: {
     email: process.env.CEO_EMAIL || 'ceo@visaconsultancy.com',
