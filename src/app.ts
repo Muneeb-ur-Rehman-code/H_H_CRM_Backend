@@ -18,12 +18,20 @@ const app: Application = express();
 
 // Security middleware
 app.use(helmet());
-app.use(
-  cors({
-    origin: [config.urls.clientUrl, config.urls.crmUrl],
-    credentials: true
-  })
-);
+// app.use(
+//   cors({
+//     origin: [config.urls.clientUrl, config.urls.crmUrl, 'http://localhost:5173'],
+//     credentials: true
+//   })
+// );
+
+
+// Bas ye 2 lines replace kar do — sab kuch chalega
+app.use(cors({
+  origin: true,           // ← Ye magic hai dev mein
+  credentials: true
+}));
+
 
 // Rate limiting
 const limiter = rateLimit({

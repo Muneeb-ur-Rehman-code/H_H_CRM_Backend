@@ -36,7 +36,7 @@ const config: Config = {
     from: process.env.EMAIL_FROM || 'noreply@visaconsultancy.com'
   },
   urls: {
-    clientUrl: process.env.CLIENT_URL || 'http://localhost:3000',
+    clientUrl: process.env.CLIENT_URL || 'http://localhost:5173',
     crmUrl: process.env.CRM_URL || 'http://localhost:3001'
   },
   ceo: {
