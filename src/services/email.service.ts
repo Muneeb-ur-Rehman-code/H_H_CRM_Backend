@@ -3,18 +3,41 @@ import config from '../config/config';
 import { UserRole } from '../types/user.types';
 
 class EmailService {
-  private transporter: Transporter;
+  private transporter?: Transporter;
 
-  constructor() {
+  // Lazily create transporter so we can fallback to a test account in development
+  private async getTransporter(): Promise<Transporter> {
+    if (this.transporter) return this.transporter;
+
+    // Use Ethereal test account in development when no real creds provided
+    if (config.nodeEnv === 'development' && (!config.email.user || !config.email.pass)) {
+      const testAccount = await nodemailer.createTestAccount();
+      this.transporter = nodemailer.createTransport({
+        host: testAccount.smtp.host,
+        port: testAccount.smtp.port,
+        secure: testAccount.smtp.secure,
+        auth: {
+          user: testAccount.user,
+          pass: testAccount.pass
+        }
+      });
+      console.log('Using Ethereal test SMTP account for emails.');
+      return this.transporter;
+    }
+
+    // Use configured SMTP
+    const secure = Number(config.email.port) === 465;
     this.transporter = nodemailer.createTransport({
       host: config.email.host,
       port: config.email.port,
-      secure: false,
+      secure,
       auth: {
         user: config.email.user,
         pass: config.email.pass
       }
     });
+
+    return this.transporter;
   }
 
   /**
@@ -171,13 +194,21 @@ class EmailService {
 
   private async sendMail(to: string, subject: string, html: string): Promise<void> {
     try {
-      await this.transporter.sendMail({
+      const transporter = await this.getTransporter();
+      const info = await transporter.sendMail({
         from: config.email.from,
         to,
         subject,
         html
       });
-      console.log(`📧 Email sent to ${to}`);
+
+      // If using Ethereal, log preview URL
+      if ((nodemailer as any).getTestMessageUrl && info && info.messageId && config.nodeEnv === 'development') {
+        const preview = (nodemailer as any).getTestMessageUrl(info);
+        console.log(`📧 Email sent to ${to}. Preview: ${preview}`);
+      } else {
+        console.log(`📧 Email sent to ${to}`);
+      }
     } catch (error) {
       console.error('❌ Email sending error:', error);
       throw error;
