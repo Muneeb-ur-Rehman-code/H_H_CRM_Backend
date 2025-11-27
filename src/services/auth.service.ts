@@ -116,8 +116,8 @@ class AuthService {
 
     // Send OTP for email verification
     const otp = user.generateOTP();
-    await user.save();
     await EmailService.sendOTPEmail(user.email, otp);
+    await user.save();
 
     // Notify admin about new registration request
     await this.notifyAdminNewRegistration(user);
@@ -137,8 +137,10 @@ class AuthService {
     if (!user) {
       throw new ApiError(404, 'No pending registration found for this email');
     }
-
+console.log(otp)
     const isValid = await user.verifyOTP(otp);
+    console.log(isValid)
+
     if (!isValid) {
       await user.save();
       throw new ApiError(400, 'Invalid or expired OTP');
